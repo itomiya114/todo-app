@@ -8,16 +8,33 @@ const classNames = {
 const list = document.getElementById('todo-list')
 const itemCountSpan = document.getElementById('item-count')
 const uncheckedCountSpan = document.getElementById('unchecked-count')
+let locallist = JSON.parse(localStorage.getItem("todo"));
+let num = 0;
+if (!locallist) {
+  locallist = [];
+}
+locallist.forEach(todoItem => {
 
-
-
-function newTodo() {
-  // get todoText from user
-  const todoText = prompt("Add a todo!")
+  newTodo(todoItem.todo == null ? "untitled" : todoItem.todo, todoItem.checked);
+});
+function newTodo(todoText = null, checked = false) {
+  if (todoText == null) {
+    // get todoText from user
+    todoText = prompt("Add a todo!");
+    if (!todoText) {
+      return;
+    }
+    locallist.push({ todo: todoText, checked: false });
+    localStorage.setItem("todo", JSON.stringify(locallist));
+  }
 
   // create a todoElement with inputted todoText
-  todoElement = makeTodo(todoText)
-
+  todoElement = makeTodo(todoText);
+  if (checked) {
+    todoElement.getElementsByClassName(classNames.TODO_CHECKBOX)[0].checked = checked;
+  }
+  todoElement.getElementsByClassName(classNames.TODO_CHECKBOX)[0].index = num;
+  num++;
   // append todoElement to DOM list element
   render(todoElement, list)
 
@@ -25,13 +42,16 @@ function newTodo() {
   countNewTodo(itemCountSpan)
 
   // count unchecked todos
+  if(!checked){
   countUncheckedTodo(uncheckedCountSpan)
-
+  }
   // select todoElement's checkbox from the DOM
-  const checkbox = todoElement.lastElementChild
+  const checkbox = todoElement.children[todoElement.children.length-2];
 
   // if checkbox checked decrement unchecked todos count by one otherwise do the opposite
-  checkbox.addEventListener("click", function(event) {
+  checkbox.addEventListener("click", function (event) {
+    locallist[event.target.index].checked = event.target.checked;
+    localStorage.setItem("todo", JSON.stringify(locallist));
     if (event.target.checked) {
       countCheckedTodo(uncheckedCountSpan)
     } else {
@@ -41,7 +61,13 @@ function newTodo() {
 
 }
 
+const deleteTodo=(index)=>{
+list.children[index].remove();
+for(let i=index+1;i<list.length;i++){
 
+}
+localStorage.
+}
 // create todoElements
 function makeTodo(todoText) {
   // create li
@@ -59,7 +85,10 @@ function makeTodo(todoText) {
   checkbox.setAttribute("type", "checkbox")
 
   addStyle(classNames.TODO_CHECKBOX, checkbox)
+  const button = document.createElement("button");
+  button.innerHTML = "delete";
 
+  button.addEventListener("click",()=>{alert();});
   // add text to span
   span.textContent = todoText
 
@@ -68,7 +97,7 @@ function makeTodo(todoText) {
 
   // appent checkbox to li
   render(checkbox, li)
-
+  render(button, li);
   // return todoElement
   return li
 

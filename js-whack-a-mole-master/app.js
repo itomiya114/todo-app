@@ -5,16 +5,21 @@ let score = document.querySelector('#score');
 
 let result = 0;
 let currentTime = TIMELEFT.textContent;
+let prevIndex = -1;
+let hitPosition = null;
 function randomSquare() {
-    SQUARE.forEach(className => {
-        className.classList.remove('mole');
-    })
-
-    let randomPosition = SQUARE[Math.floor(Math.random() * 9)];
+    if (prevIndex >= 0) {
+        SQUARE[prevIndex].classList.remove("mole");
+    }
+    prevIndex = Math.floor(Math.random() * 9);
+    let randomPosition = SQUARE[prevIndex];
     randomPosition.classList.add('mole');
 
     //assign the if the randomPosition to hitPosition to use later
     hitPosition = randomPosition.id;
+    if (currentTime === 0) {
+        clearInterval(timerMoleId);
+    }
 }
 
 SQUARE.forEach(id => {
@@ -22,14 +27,15 @@ SQUARE.forEach(id => {
         if (id.id === hitPosition) {
             result++;
             score.textContent = result;
+            id.classList.remove("mole");
             hitPosition = null;
         }
     })
 })
 
 function moveMole() {
-    let timerId = null;
-    timerId = setInterval(randomSquare, 1000);
+    let timerMoleId = null;
+    timerMoleId = setInterval(randomSquare, 1000);
 }
 
 moveMole();

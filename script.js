@@ -60,13 +60,13 @@ function newTodo(todoText = null, checked = false) {
 }
 
 function deleteTodo(e) {
-    console.log(e);
+    
     if (!e.target.parentElement.children[1].checked) {
         count(uncheckedCountSpan, -1);
     }
     count(itemCountSpan, -1);
 
-    delete locallist[event.target.parentElement.children[0].innerHTML];
+    delete locallist[e.target.parentElement.children[0].innerHTML];
     localStorage.setItem("todo", JSON.stringify(locallist));
     e.target.parentElement.remove();
 }

@@ -17,9 +17,7 @@ function randomSquare() {
 
     //assign the if the randomPosition to hitPosition to use later
     hitPosition = randomPosition.id;
-    if (currentTime === 0) {
-        clearInterval(timerMoleId);
-    }
+    
 }
 
 SQUARE.forEach(id => {
@@ -33,21 +31,16 @@ SQUARE.forEach(id => {
     })
 })
 
-function moveMole() {
-    let timerMoleId = null;
-    timerMoleId = setInterval(randomSquare, 1000);
-}
-
-moveMole();
-
 function countDown() {
     currentTime--;
     TIMELEFT.textContent = currentTime;
 
     if (currentTime === 0) {
+        clearInterval(timerMoleId);
         clearInterval(timerId);
         alert('GAME OVER! your final score is' + result);
     }
 }
 
+let timerMoleId = setInterval(randomSquare, 1000);;
 let timerId = setInterval(countDown, 1000);
